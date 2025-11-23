@@ -1,0 +1,41 @@
+[
+  {
+    "topic": "Python Basics",
+    "questions": [
+      {
+        "question_text": "What is the correct file extension for Python files?",
+        "options": [
+          { "text": ".pyth", "is_correct": false },
+          { "text": ".py", "is_correct": true },
+          { "text": ".pt", "is_correct": false },
+          { "text": ".python", "is_correct": false }
+        ]
+      },
+      {
+        "question_text": "How do you insert COMMENTS in Python code?",
+        "options": [
+          { "text": "/* This is a comment */", "is_correct": false },
+          { "text": "// This is a comment", "is_correct": false },
+          { "text": "# This is a comment", "is_correct": true }
+        ]
+      },
+      {
+        "question_text": "Which of the following is NOT a legal variable name?",
+        "options": [
+          { "text": "my-var", "is_correct": true },
+          { "text": "Myvar", "is_correct": false },
+          { "text": "_myvar", "is_correct": false },
+          { "text": "my_var", "is_correct": false }
+        ]
+      },
+      {
+        "question_text": "How do you create a function in Python?",
+        "options": [
+          { "text": "function myFunction():", "is_correct": false },
+          { "text": "def myFunction():", "is_correct": true },
+          { "text": "create myFunction():", "is_correct": false }
+        ]
+      }
+    ]
+  }
+]

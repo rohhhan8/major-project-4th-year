@@ -1,0 +1,61 @@
+# =================================================================
+# General
+# =================================================================
+
+# Logs
+*.log
+
+# Editor-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS-specific
+.DS_Store
+
+# =================================================================
+# Backend (Python)
+# =================================================================
+
+# Python runtime files
+/backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+/backend/venv/
+/backend/env/
+
+# Package caches
+/backend/pip-cache/
+
+# Secrets - IMPORTANT
+# These should be handled securely and not committed to the repository.
+# The /backend/ path prefix makes the rule more specific.
+/backend/client_secret.json
+/backend/.env
+/backend/*.env
+
+# =================================================================
+# Frontend (Node.js)
+# =================================================================
+
+# Dependencies
+/frontend/node_modules/
+
+# Build output
+/frontend/dist/
+/frontend/build/
+
+# Vite cache
+/frontend/.vite/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# NPM cache
+/frontend/.npm/

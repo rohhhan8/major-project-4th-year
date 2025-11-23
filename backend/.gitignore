@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-cache/
+.env
+
+# Secrets
+client_secret.json
+*.env
+
+# Logs
+*.log
+
+# Editor-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
