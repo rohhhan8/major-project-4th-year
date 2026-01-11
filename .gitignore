@@ -13,44 +13,49 @@
 
 # OS-specific
 .DS_Store
+Thumbs.db
 
 # =================================================================
 # Backend (Python)
 # =================================================================
 
 # Python runtime files
-/backend/__pycache__/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
 
 # Virtual environments
-/backend/venv/
-/backend/env/
+venv/
+env/
+.venv/
+.env/
 
 # Package caches
-/backend/pip-cache/
+pip-cache/
 
 # Secrets - IMPORTANT
-# These should be handled securely and not committed to the repository.
-# The /backend/ path prefix makes the rule more specific.
-/backend/client_secret.json
-/backend/.env
-/backend/*.env
+client_secret.json
+.env
+*.env
+
+# Model files (regeneratable)
+*.pkl
 
 # =================================================================
 # Frontend (Node.js)
 # =================================================================
 
 # Dependencies
-/frontend/node_modules/
+node_modules/
 
 # Build output
-/frontend/dist/
-/frontend/build/
+dist/
+build/
 
 # Vite cache
-/frontend/.vite/
+.vite/
 
 # Debug logs
 npm-debug.log*
@@ -58,4 +63,26 @@ yarn-debug.log*
 yarn-error.log*
 
 # NPM cache
-/frontend/.npm/
+.npm/
+
+# =================================================================
+# Data / Database
+# =================================================================
+
+# Cookies (sensitive)
+cookies.txt
+
+# NOTE: video_db/ is NOT ignored - it contains the ChromaDB vector database
+# with video transcripts and embeddings needed for the recommendation engine
+
+# =================================================================
+# Junk / Temporary Files
+# =================================================================
+
+# Command output files
+netstat
+cls
+
+# Temp files
+*.tmp
+*.temp

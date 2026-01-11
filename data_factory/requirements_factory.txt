@@ -1,0 +1,22 @@
+# Data Factory Requirements
+# Install with: pip install -r requirements_factory.txt
+
+# YouTube extraction
+youtube-transcript-api>=0.6.0
+pytube>=15.0.0
+yt-dlp>=2023.10.0  # Backup for pytube
+
+# Vector database
+chromadb>=0.4.0
+
+# Embeddings
+sentence-transformers>=2.2.0
+
+# Common utilities
+python-dotenv>=1.0.0
+tqdm>=4.65.0  # Progress bars
+pymongo>=4.0.0 # MongoDB Connection
+
+# Optional: For advanced NLP tagging
+# spacy>=3.5.0
+# nltk>=3.8.0

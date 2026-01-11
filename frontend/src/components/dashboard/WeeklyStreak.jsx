@@ -14,7 +14,7 @@ const WeeklyStreak = ({ data }) => {
                 <h4 className="text-sm font-medium text-gray-600">Weekly Streak</h4>
                 <span className="text-2xl">🔥</span>
             </div>
-            
+
             <div className="space-y-4">
                 <div>
                     <div className="text-3xl font-semibold mb-1">{current} Days</div>
@@ -26,11 +26,10 @@ const WeeklyStreak = ({ data }) => {
                 <div className="grid grid-cols-7 gap-2">
                     {daysCompleted.map((completed, index) => (
                         <div key={index} className="flex flex-col items-center gap-1">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                                completed
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${completed
                                     ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
                                     : "border-2 border-gray-200 text-gray-600"
-                            }`}>
+                                }`}>
                                 {String(index + 1).padStart(2, "0")}
                             </div>
                             <span className="text-xs text-gray-500">{daysOfWeek[index]}</span>
