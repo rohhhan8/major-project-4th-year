@@ -1,455 +1,362 @@
-# 🎓 Adaptive Learning Platform
+# 🧠 Thinkly - AI-Powered Adaptive Learning Platform
 
-A full-stack web application designed to provide personalized learning experiences with video content, interactive quizzes, and progress tracking.
+> **An intelligent educational platform that analyzes your learning patterns and recommends personalized video content using Machine Learning and RAG (Retrieval-Augmented Generation).**
 
-## 📋 Table of Contents
-- [Project Overview](#project-overview)
-- [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-- [Detailed Setup](#detailed-setup)
-- [Project Structure](#project-structure)
-- [Running the Application](#running-the-application)
-- [API Documentation](#api-documentation)
-- [Features](#features)
-- [Troubleshooting](#troubleshooting)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![React](https://img.shields.io/badge/React-18-61DAFB)
+![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688)
+![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash-4285F4)
 
 ---
 
-## 🎯 Project Overview
+## 📌 Project Overview
 
-This adaptive learning platform helps users:
-- 📚 Learn through structured video content
-- 📝 Test knowledge with interactive quizzes
-- 📊 Track learning progress and streaks
-- 🎯 Adapt learning based on quiz performance
-- 👤 Authenticate securely with Google OAuth
+Thinkly is a research-backed adaptive learning platform that goes beyond traditional LMS systems by using **unsupervised machine learning** and **semantic search** to understand each student's unique learning patterns and recommend the most relevant educational content.
 
----
+### **Core Innovation**
 
-## 🛠 Tech Stack
-
-### Frontend
-- **React 19** - UI library
-- **Vite** - Lightning-fast build tool
-- **Tailwind CSS** - Utility-first styling
-- **React Router DOM** - Client-side routing
-- **Axios** - HTTP client
-- **React YouTube** - YouTube video integration
-
-### Backend
-- **FastAPI** - Modern Python web framework
-- **MongoDB** - NoSQL database
-- **Google OAuth** - Social authentication
-- **PyJWT** - JWT token management
-- **Uvicorn** - ASGI server
+| Traditional LMS | Thinkly's Approach |
+|----------------|-------------------|
+| Basic pass/fail grading | **ML clustering analyzing score + response time** |
+| Manual playlists | **Semantic search over video transcript embeddings** |
+| No note-taking help | **LLM-powered notes with RAG chunking strategy** |
+| One-size-fits-all | **Profile-specific content (Struggling vs Rushed vs Achiever)** |
 
 ---
 
-## 🚀 Quick Start
+## 🔬 Novel Research Contributions
 
-### Prerequisites
-- **Python 3.8+** → [Download](https://www.python.org/)
-- **Node.js 18+** → [Download](https://nodejs.org/)
-- **MongoDB** (Local or Atlas) → [Setup Guide](#database-setup)
+### **1. K-Means Learner Profiling (Unsupervised ML)**
 
-### Automatic Setup (Windows)
+**What's New:** Unlike traditional quiz systems that only look at scores, we use a **2D feature space (Score × Time)** to detect nuanced learning behaviors.
 
-**Option 1: PowerShell**
-```powershell
-.\QUICKSTART.ps1
+| Cluster | Score | Time | Behavior |
+|---------|-------|------|----------|
+| **Struggling** | Low (20-55%) | High (60-120s) | Trying but needs basics |
+| **Rushed** | Variable (30-70%) | Low (10-35s) | Too fast, missing concepts |
+| **High Achiever** | High (70-100%) | Moderate (30-70s) | Ready for advanced content |
+
+**Technical Details:**
+- **Algorithm:** scikit-learn K-Means with `n_clusters=3`  
+- **Dataset:** **5,000 synthetic student records** (40% Struggling, 35% Achievers, 25% Rushed)
+- **Features:** StandardScaler normalized score and time-per-question
+- **Model File:** `student_clustering_model.pkl` (~3KB)
+
+**Profile Classification Formula:**
+```python
+if percentage >= 70:
+    profile = "High Achiever"
+elif rushed_percentage > 40 or avg_time_ratio < 0.6:
+    profile = "Rushed"
+else:
+    profile = "Struggling"
 ```
 
-**Option 2: Command Prompt**
-```cmd
-QUICKSTART.bat
-```
+---
 
-These scripts will:
-✅ Check Python and Node.js installation
-✅ Create Python virtual environment
-✅ Install all dependencies
-✅ Configure environment files
-✅ Load initial quiz data
+### **2. 5-Pillar Micro-Diagnosis System (Novel)**
+
+**What's New:** Goes beyond topic-level analysis to **sub-topic weakness identification** using a 5-pillar framework.
+
+| Pillar | Tests | Recommended Content |
+|--------|-------|---------------------|
+| **Concept** | Definition, Theory, "What is" | Whiteboard Animations |
+| **Implementation** | Syntax, Code Structure | Live Coding Tutorials |
+| **Complexity** | Big-O, Time/Space Analysis | Analysis Deep-Dives |
+| **Debugging** | Error Fixing, Edge Cases | Debugging Guides |
+| **Application** | Real-world Use Cases | System Design Videos |
+
+**How It Works:**
+1. Each MCQ question is tagged with a **diagnosis_pillar**
+2. After quiz, we calculate **accuracy per pillar**
+3. **Weakest pillar** drives video recommendations
+4. Questions have **ideal_time** based on pillar (Debugging = 1.5x base time)
+
+**Rushed Detection Formula:**
+```python
+time_ratio = user_time / ideal_time
+is_rushed = time_ratio < 0.3  # Less than 30% of ideal time
+```
 
 ---
 
-## 📖 Detailed Setup
+### **3. RAG-Based Video Recommendation (Semantic Search)**
 
-### Backend Setup
+**What's New:** We use **sentence embeddings** to find videos by meaning, not keywords.
 
-#### 1. Navigate to Backend Directory
+**Architecture:**
+```
+User Query → SentenceTransformer → ChromaDB → Top-N Videos
+              (all-MiniLM-L6-v2)    (Vector DB)
+```
+
+**Technical Details:**
+- **Embedding Model:** `all-MiniLM-L6-v2` (384 dimensions)
+- **Vector Database:** ChromaDB (persistent mode)
+- **Relevance Formula:** `100 × exp(-distance × 0.5)` for percentage scoring
+- **Fallback Logic:** Relaxes filters when strict search yields no results
+- **Video Database:** Pre-indexed YouTube transcript chunks
+
+---
+
+### **3. LLM-Powered Notes Generation with Chunking Strategy**
+
+**What's New:** Handles **multi-hour lecture videos** that exceed LLM token limits using a divide-and-conquer approach.
+
+**Pipeline:**
+```
+Full Transcript → [25K char chunks with 500 char overlap] → Gemini API → Stitch → Master Notes
+```
+
+**Technical Details:**
+- **LLM:** Google Gemini 2.5 Flash
+- **Chunk Size:** ~25,000 characters (~15 mins of content)
+- **Overlap:** 500 characters for context continuity
+- **Smart Break Points:** Finds sentence endings to avoid mid-thought cuts
+- **Rate Limiting:** 1.5s delay between API calls
+
+---
+
+### **4. Gemini AI Coach (Smart Diagnosis)**
+
+**What's New:** Uses LLM to generate **personalized coaching tips** and **optimized search queries** based on weak areas.
+
+**Features:**
+- Analyzes micro-tags (Concept, Implementation, Complexity, Debugging, Application)
+- Maps weakness to video style (whiteboard animations for concepts, live coding for implementation)
+- Generates natural language coaching feedback
+
+---
+
+### **5. Automatic Video Tagging Engine (Data Factory)**
+
+**What's New:** A **weighted scoring system** that analyzes title, intro, and full transcript to auto-classify videos.
+
+**Tagging Categories:**
+| Tag Type | Options |
+|----------|---------|
+| **Difficulty** | Beginner, Intermediate, Advanced |
+| **Style** | One_Shot, Course, Practical, Interview_Prep, Conceptual, Advice |
+| **Granularity** | Specific, Broad |
+| **Engagement** | Popular, Standard, Hidden_Gem |
+
+**Scoring Weights:**
+- Title match: **+10 points**
+- Intro (first 500 chars): **+5 points**  
+- Body frequency: **+1 point per occurrence**
+
+---
+
+## 📊 Datasets & Models
+
+| Resource | Details |
+|----------|---------|
+| **MCQ Question Bank** | **2,700+** questions across DSA, Python, Web Dev with 5-pillar tags |
+| **Synthetic Student Data** | **5,000** records with score (0-100) and time_per_question (10-120s) |
+| **Video Transcript Chunks** | **2,520** embeddings in ChromaDB (384 dimensions each) |
+| **K-Means Model** | 3 clusters, StandardScaler, saved as `.pkl` |
+| **Sentence Transformer** | `all-MiniLM-L6-v2` from Hugging Face |
+
+> 📄 **Research Foundation:** See [`Personalized_Adaptive_Learning_IEEE_Paper.pdf`](./Personalized_Adaptive_Learning_IEEE_Paper.pdf) for the academic basis of this system.
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FRONTEND (React + Vite)                  │
+│  Landing • Dashboard • Quiz • Video Player • Notes Viewer  │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+       ┌───────────────────┴───────────────────┐
+       │                                       │
+       ▼                                       ▼
+┌──────────────────┐                 ┌──────────────────────┐
+│  Main API :8000  │                 │ Recommend API :8001   │
+│  ─────────────   │                 │ ──────────────────    │
+│  • /auth         │                 │ • /recommend          │
+│  • /quiz         │                 │ • /health             │
+│  • /video        │                 │                       │
+│  • /notes        │                 │ Semantic Search with  │
+│  • /progress     │                 │ ChromaDB + Embeddings │
+└────────┬─────────┘                 └───────────┬───────────┘
+         │                                       │
+         ▼                                       ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     MACHINE LEARNING LAYER                    │
+│  K-Means Clustering │ SentenceTransformer │ Gemini 2.5 Flash │
+└──────────────────────────────────────────────────────────────┘
+         │                       │                    │
+         ▼                       ▼                    ▼
+   ┌──────────┐           ┌──────────┐         ┌──────────┐
+   │ Firebase │           │ ChromaDB │         │ Gemini   │
+   │ Firestore│           │ (Vectors)│         │ API      │
+   └──────────┘           └──────────┘         └──────────┘
+```
+
+> 📐 **Detailed architecture diagrams available in** [`ARCHITECTURE_DIAGRAMS.md`](./ARCHITECTURE_DIAGRAMS.md)
+
+---
+
+## 📁 Project Structure
+
+```
+thinkly/
+├── backend/              # FastAPI Python Backend
+│   ├── app/              # Core application modules
+│   │   ├── quiz_engine.py       # K-Means inference engine
+│   │   ├── train_model.py       # Model training pipeline
+│   │   ├── search_engine.py     # ChromaDB semantic search
+│   │   ├── ai_coach.py          # Gemini AI integration
+│   │   └── note_generation_service.py  # Chunking strategy
+│   └── main.py           # FastAPI app entry point
+│
+├── frontend/             # React + Vite Frontend
+│   └── src/
+│       ├── pages/        # Route components
+│       └── components/   # Reusable UI components
+│
+├── data_factory/         # Offline Video Processing Pipeline
+│   ├── extractors/       # YouTube transcript extraction
+│   ├── processors/       # Tagger & Chunker logic
+│   └── database/         # ChromaDB vector storage
+│
+└── video_db/             # ChromaDB persistent storage (included)
+```
+
+---
+
+## 🚀 Getting Started
+
+### **Prerequisites**
+- Python 3.11+
+- Node.js 18+
+- API Keys: Google OAuth, Gemini API, YouTube Data API
+
+### **1. Clone & Install**
+
 ```bash
+# Clone the repository
+git clone https://github.com/Learnwisely/major-project.git
+cd major-project
+
+# Backend setup
 cd backend
-```
-
-#### 2. Create Virtual Environment
-```bash
-# Windows
 python -m venv venv
-venv\Scripts\activate
-
-# macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
-```
-
-#### 3. Install Dependencies
-```bash
+venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-```
 
-Or manually install:
-```bash
-pip install fastapi uvicorn pymongo python-jose cryptography email-validator google-auth-oauthlib google-auth python-dotenv
-```
-
-#### 4. Configure Environment
-Copy `.env.example` to `.env` and update:
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-```env
-# Local MongoDB
-MONGO_DETAILS=mongodb://localhost:27017
-
-# Or MongoDB Atlas (Cloud)
-# MONGO_DETAILS=mongodb+srv://user:password@cluster.mongodb.net/adaptive_learning
-
-# JWT Secret (generate a secure key)
-SECRET_KEY=your-random-secret-key-here-min-32-chars
-```
-
-#### 5. Load Quiz Data
-```bash
-python load_quizzes.py
-```
-
-#### 6. Start Backend Server
-```bash
-python main.py
-```
-
-✅ Backend running at: `http://localhost:8000`
-📚 API Documentation: `http://localhost:8000/docs`
-
----
-
-### Frontend Setup
-
-#### 1. Navigate to Frontend Directory
-```bash
-cd frontend
-```
-
-#### 2. Install Dependencies
-```bash
+# Frontend setup
+cd ../frontend
 npm install
 ```
 
-#### 3. Start Development Server
-```bash
-npm run dev
+### **2. Configure Environment**
+
+Create `backend/.env`:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+MONGODB_URL=your_mongodb_connection_string
 ```
 
-✅ Frontend running at: `http://localhost:5173` (or `5174`)
+### **3. Run the Application**
 
----
-
-## 🏃 Running the Application
-
-### Method 1: Two Separate Terminals (Recommended)
-
-**Terminal 1 - Backend:**
 ```bash
+# Terminal 1: Backend API
 cd backend
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # macOS/Linux
-python main.py
-```
+python main.py  # Runs on http://localhost:8000
 
-**Terminal 2 - Frontend:**
-```bash
+# Terminal 2: Recommendation Engine (Optional)
+python main_recommend.py  # Runs on http://localhost:8001
+
+# Terminal 3: Frontend
 cd frontend
-npm run dev
-```
-
-### Method 2: Concurrent Execution
-
-**Windows (PowerShell):**
-```powershell
-# In root directory
-$backend = Start-Process -FilePath python -ArgumentList "backend/main.py" -PassThru
-$frontend = Start-Process -FilePath npm -ArgumentList "-C frontend run dev" -PassThru
-```
-
-**macOS/Linux:**
-```bash
-cd backend && source venv/bin/activate && python main.py &
-cd frontend && npm run dev &
+npm run dev  # Runs on http://localhost:5173
 ```
 
 ---
 
-## 📊 Project Structure
+## 🛠️ Tech Stack
 
-```
-adaptive-learning-platform/
-│
-├── backend/
-│   ├── app/
-│   │   ├── auth.py           # Google OAuth, JWT authentication
-│   │   ├── database.py       # MongoDB connection & helpers
-│   │   ├── models.py         # Pydantic data models
-│   │   ├── quiz.py           # Quiz endpoints
-│   │   ├── video.py          # Video endpoints
-│   │   └── progress.py       # Progress tracking endpoints
-│   │
-│   ├── main.py               # FastAPI application entry point
-│   ├── quizzes.json          # Quiz questions & answers
-│   ├── load_quizzes.py       # Script to populate DB
-│   ├── requirements.txt      # Python dependencies
-│   ├── .env.example          # Environment template
-│   └── .gitignore
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── dashboard/    # Dashboard components
-│   │   │   │   ├── AvgQuizScore.jsx
-│   │   │   │   ├── Calendar.jsx
-│   │   │   │   ├── LearningProgress.jsx
-│   │   │   │   ├── OngoingVideos.jsx
-│   │   │   │   ├── RecentActivity.jsx
-│   │   │   │   ├── UpcomingTasks.jsx
-│   │   │   │   └── WeeklyStreak.jsx
-│   │   │   └── (other components)
-│   │   │
-│   │   ├── pages/            # Route pages
-│   │   │   ├── DashboardPage.jsx
-│   │   │   ├── LandingPage.jsx
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── NotesPage.jsx
-│   │   │   ├── QuizPage.jsx
-│   │   │   ├── QuizTopicsPage.jsx
-│   │   │   ├── VideoPlayerPage.jsx
-│   │   │   └── VideoResultsPage.jsx
-│   │   │
-│   │   ├── App.jsx           # Main app component
-│   │   ├── App.css
-│   │   ├── AuthContext.jsx   # Auth state management
-│   │   ├── main.jsx          # React entry point
-│   │   ├── index.css
-│   │   └── assets/
-│   │
-│   ├── public/               # Static assets
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── eslint.config.js
-│
-├── SETUP_INSTRUCTIONS.md     # Detailed setup guide
-├── QUICKSTART.bat            # Windows batch setup script
-├── QUICKSTART.ps1            # PowerShell setup script
-└── README.md                 # This file
-```
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | React 18, Vite, TailwindCSS, Framer Motion |
+| **Backend** | FastAPI, Python 3.11, Uvicorn |
+| **Vector DB** | ChromaDB (persistent mode) |
+| **Auth** | Google OAuth 2.0, Firebase Auth |
+| **Storage** | Firebase Firestore, MongoDB Atlas |
+| **External APIs** | YouTube Data API, YouTube Transcript API |
 
 ---
 
-## 🌐 Database Setup
+## 🤖 Machine Learning & AI Stack
 
-### Option 1: Local MongoDB
+### **Core ML Libraries**
 
-**Windows:**
-1. Download from: https://www.mongodb.com/try/download/community
-2. Install with default settings
-3. MongoDB starts automatically as a service
+| Library | Version | Purpose |
+|---------|---------|---------|
+| **scikit-learn** | Latest | K-Means clustering, StandardScaler normalization |
+| **NumPy** | Latest | Numerical computations, array operations |
+| **Pandas** | Latest | DataFrame operations, data preprocessing |
+| **Joblib** | Latest | Model serialization/deserialization (.pkl) |
 
-**macOS (Homebrew):**
-```bash
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
-```
+### **NLP & Embeddings**
 
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt-get install -y mongodb
-sudo systemctl start mongod
-```
+| Library | Model | Purpose |
+|---------|-------|---------|
+| **SentenceTransformers** | `all-MiniLM-L6-v2` | 384-dim semantic embeddings |
+| **ChromaDB** | Persistent Client | Vector storage & similarity search |
+| **PyTorch** | Backend | Powers SentenceTransformers inference |
+| **Transformers (HuggingFace)** | Backend | Pre-trained language model weights |
 
-**Verify Connection:**
-```bash
-mongosh
-# or
-mongo
-```
+### **Generative AI**
 
-### Option 2: MongoDB Atlas (Cloud - Recommended)
+| Service | Model | Purpose |
+|---------|-------|---------|
+| **Google Gemini API** | `gemini-2.5-flash` | AI coaching, notes generation, smart queries |
+| **google-generativeai** | v0.8.5 | Python SDK for Gemini |
 
-1. Go to: https://www.mongodb.com/cloud/atlas
-2. Create free account
-3. Create a free tier cluster
-4. Get connection string
-5. Update `.env`:
-   ```env
-   MONGO_DETAILS=mongodb+srv://username:password@cluster.mongodb.net/adaptive_learning?retryWrites=true&w=majority
-   ```
+### **Data Pipeline**
+
+| Library | Purpose |
+|---------|---------|
+| **youtube-transcript-api** | Extract video transcripts |
+| **pytube / yt-dlp** | Video metadata extraction |
+| **tqdm** | Progress bars for batch processing |
+| **PyMongo** | MongoDB Atlas connection |
 
 ---
 
-## 📚 API Documentation
+## 📈 Key Algorithms Summary
 
-Once backend is running, view interactive API docs:
-
-**Swagger UI:** http://localhost:8000/docs
-**ReDoc:** http://localhost:8000/redoc
-
-### Key Endpoints
-
-#### Authentication
-- `GET /auth/login` - Initiate Google OAuth login
-- `GET /auth/callback` - OAuth callback
-
-#### Quizzes
-- `GET /quiz/topics` - Get all quiz topics
-- `GET /quiz/{topic}` - Get quiz by topic
-- `POST /quiz/submit` - Submit quiz answers
-
-#### Videos
-- `GET /video/list` - Get all videos
-- `POST /video/progress` - Update video progress
-
-#### Progress
-- `GET /progress/{user_id}` - Get user progress
-- `GET /progress/streak/{user_id}` - Get user streak
+| Algorithm | Purpose | Location |
+|-----------|---------|----------|
+| **K-Means Clustering** | Learner profile classification | `quiz_engine.py` |
+| **Semantic Search** | Content-based video recommendation | `search_engine.py` |
+| **Divide & Conquer Chunking** | Long video notes generation | `note_generation_service.py` |
+| **Weighted Scoring Tagger** | Automatic video classification | `tagger.py` |
+| **Exponential Decay Relevance** | Similarity percentage calculation | `search_engine.py` |
+| **5-Pillar Diagnosis** | Micro-weakness identification | `quiz.py` |
 
 ---
 
-## ✨ Features
+## 📚 Documentation
 
-- ✅ **Google OAuth Authentication** - Secure login
-- ✅ **Interactive Quizzes** - Multiple choice questions
-- ✅ **Video Learning** - YouTube video integration
-- ✅ **Progress Tracking** - Track completed quizzes & videos
-- ✅ **Streaks** - Motivating daily streaks
-- ✅ **Dashboard** - Visual learning analytics
-- ✅ **Responsive Design** - Works on desktop & mobile
-- ✅ **CORS Enabled** - Frontend-backend communication
+- [`ARCHITECTURE_DIAGRAMS.md`](./ARCHITECTURE_DIAGRAMS.md) - Detailed system diagrams with Mermaid
+- [`EXAM_PROJECT_WRITEUP.md`](./EXAM_PROJECT_WRITEUP.md) - Academic project documentation
+- [`backend/README.md`](./backend/README.md) - Backend API documentation
 
 ---
 
-## 🐛 Troubleshooting
+## 👨‍💻 Authors
 
-### Backend Issues
-
-**❌ "Address already in use" on port 8000**
-```bash
-# Change port in main.py:
-# Change: uvicorn.run(..., port=8000)
-# To: uvicorn.run(..., port=8001)
-```
-
-**❌ "ModuleNotFoundError" for imports**
-```bash
-# Ensure virtual environment is activated and dependencies installed
-pip install -r requirements.txt
-```
-
-**❌ MongoDB connection error**
-```bash
-# Verify MongoDB is running:
-mongosh
-# Or check .env has correct connection string
-```
-
-**❌ "client_secret.json" not found**
-```
-This is expected if OAuth isn't configured.
-The application will still run without OAuth login.
-```
-
-### Frontend Issues
-
-**❌ "Port 5173 already in use"**
-```bash
-npm run dev -- --port 5174
-```
-
-**❌ CORS errors in console**
-```
-- Ensure backend is running
-- Check backend CORS middleware allows localhost:5173
-```
-
-**❌ "npm: command not found"**
-```bash
-# Reinstall Node.js from: https://nodejs.org/
-```
-
-### General
-
-**❌ Changes not appearing**
-```bash
-# Frontend: Hard refresh (Ctrl+Shift+R)
-# Backend: Server auto-reloads with Uvicorn
-```
-
-**❌ Database shows old data**
-```bash
-# Clear quiz collection and reload:
-# In mongosh:
-# db.quizzes.deleteMany({})
-# Then run: python load_quizzes.py
-```
+Built as a Major Project for B.Tech Computer Science.
 
 ---
 
-## 📦 Build for Production
+## 📄 License
 
-### Backend Deployment
-```bash
-# Remove reload for production
-# In main.py, change: uvicorn.run(..., reload=False)
-# Deploy to: Heroku, Railway, Render, or AWS
-```
-
-### Frontend Build
-```bash
-cd frontend
-npm run build
-# Creates optimized build in: frontend/dist/
-# Deploy to: Vercel, Netlify, or static hosting
-```
-
----
-
-## 🤝 Contributing
-
-1. Create feature branch: `git checkout -b feature/amazing-feature`
-2. Commit changes: `git commit -m 'Add amazing feature'`
-3. Push to branch: `git push origin feature/amazing-feature`
-4. Open Pull Request
-
----
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
----
-
-## 💡 Need Help?
-
-- 📖 Check [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md)
-- 📚 Read [API Documentation](#api-documentation)
-- 🐛 Check [Troubleshooting](#troubleshooting) section
-- 🌐 Visit [MongoDB Docs](https://docs.mongodb.com/)
-- ⚡ Visit [FastAPI Docs](https://fastapi.tiangolo.com/)
-- ⚛️ Visit [React Docs](https://react.dev/)
-
----
-
-**Happy Learning! 🚀**
+This project is for educational purposes.
